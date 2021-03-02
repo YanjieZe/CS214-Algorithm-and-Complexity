@@ -49,8 +49,8 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 \begin{center}
 \footnotesize{\color{red}$*$ If there is any problem, please contact TA Haolin Zhou. Also please use English in homework.}
 
-% Please write down your name, student id and email.
 \footnotesize{\color{blue}$*$ Name:Yanjie Ze  \quad Student ID: 519021910706\quad Email: zeyanjie@sjtu.edu.cn}
+% site: yanjieze.xyz
 \end{center}
 
 \begin{enumerate}
@@ -118,6 +118,7 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 \begin{enumerate}
 	 
 \item Fill in the blanks and \textbf{explain} your answers. You need to answer when the best case and the worst case happen. 
+%表格
 \begin{table}[!h]
 
 \label{Tab-compare}
@@ -128,25 +129,194 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 		\textbf{Algorithm} & \textbf{Time Complexity}\tnote{1} & \textbf{Space Complexity} \\
 		\hline
 		\hline
-		$QuickSort$ &  &  \\
+		$QuickSort$ & $\Omega(nlogn)$,$O(nlogn)$,$O(n^2)$  &  $O(logn)$ \\
 
-		$CocktailSort$ &  &   \\
+		$CocktailSort$ & $\Omega(n),O(n^2) ,O(n^2)$ & O(1)  \\ 
 		\bottomrule[2pt]
 
 
 	\end{tabular}
     \begin{tablenotes}
     	\footnotesize
-    	\item[1] The response order can be given in \emph{best}, \emph{average}, and \emph{worst}.
+    	\item[1] The response order is given in \emph{best}, \emph{average}, and \emph{worst}.
     \end{tablenotes}
 	\end{threeparttable}
 \end{table}
 
+
+\begin{solution}
+~\\
+% 快排
+For $QuickSort$:
+
+% 最佳情况
+\textbf{Best Case: }$\Omega(nlogn)$
+
+Appears when every time the pivot separates the array into two equally-sized subarrays. 
+$$
+\displaystyle T(n) = \sum_{j=1}^{logn}\frac{n}{2^j} \times 2^j = nlogn
+$$
+
+% 最坏情况
+\textbf{Worst Case: }$O(n^2)$
+
+Appears when every time the pivot always separates the array into 1 and n-1 sized subarrays. In this situation, quick sort will just modify one element's position in each loop.
+$$
+\displaystyle T(n)=\sum_{j=1}^{n}j=\frac{n(n+1)}{2}
+$$
+
+
+
+% 平均情况的分析
+\textbf{Average Case: }$O(nlogn)$
+
+Suppose the ground truth order for an n-element array is $\{ a_1, a_2, ..., a_n\}$, and the probability for each element selected as a pivot is equal. Then we have the following formula:
+$$
+\displaystyle T(n) = \frac{1}{n} \sum_{i=1}^{n}[ T(i) + T(n-i) + n]
+$$
+
+Thus we can get:
+$$
+\displaystyle nT(n) = n^2 + 2 \sum_{i=1}^{n-1}T(i)
+$$
+
+$$
+\displaystyle (n+1)T(n+1) = (n+1)^2 + 2 \sum_{i=1}^{n}T(i)
+$$
+
+$$
+(n+1)T(n+1) - nT(n) = 2n+1 + 2T(n)
+$$
+
+After simplification we get:
+$$
+\frac{T(n+1)}{n+2} = \frac{T(n)}{n+1} + \frac{2n+1}{(n+1)(n+2)}
+$$
+Obviously we can get the comparison:
+$$
+ \frac{T(n)}{n+1} + \frac{1}{n+1}  \leq \frac{T(n+1)}{n+2} \leq \frac{T(n)}{n+1} + \frac{2}{n+1}
+$$
+
+From the left side we do inference:
+$$
+\displaystyle \frac{T(n+1)}{n+2} \geq 1 + \frac{1}{2} + ... + \frac{1}{n+1} = \sum_{i=1}^{n+1}\frac{1}{i}
+$$
+The result we get is known as \textbf{the harmonic series}. Suppose n is big enough.Thus: 
+$$
+\displaystyle \frac{T(n+1)}{n+2} \geq log(n+1) + \gamma +\epsilon,
+$$
+where $\gamma$ is the Euler–Mascheroni constant and  $\epsilon \sim \frac{1}{2(n+1)} $which approaches 0 as n+1 goes to infinity.
+
+Similarly ,we get another comparison relation from the right side:
+$$
+\displaystyle \frac{T(n+1)}{n+2} \leq 2log(n+1) + 2\gamma +2\epsilon
+$$
+
+Finally:
+$$
+(n+2)[log(n+1) + \gamma +\epsilon] \leq T(n+1) \leq 2(n+2)[log(n+1) + \gamma +\epsilon]
+$$
+Therefore, the average case is $O(nlogn)$.
+
+
+
+
+% 快排的空间复杂度
+\textbf{Space Complexity: }$O(logn)$
+
+This is because quick sort algorithm needs to use a stack to record the recursion result. And the stack's height is the same as the recursion tree's height, which is $logn$.
+
+~\\
+% 鸡尾排序
+For $CocktailSort$:
+
+%最好情况
+\textbf{Best Case: }$\Omega(n)$
+
+Appears when one loop ends, the flag $sorted$ is true. This means the array has been sorted in the beginning.
+$$
+T(n) = (n-1) + (n-2) = 2n-3
+$$
+
+%最坏情况
+\textbf{Worst Case: }$O(n^2)$
+
+Appears when the array is originally sorted increasingly. In this case, the flag $sorted$ is always turned into $false$ in each outer loop, until the array is sorted.
+$$
+\displaystyle T(n) = (n-1) + (n-2) + (n-3) + ... + 1 = \sum_{i=1}^{n-1}i = \frac{n(n-1)}{2}
+$$
+
+%平均情况
+\textbf{Average Case: }$O(n^2)$
+
+We consider a pair $P=<A, B>$. In $CocktailSort$, the time cost is mainly from the inversion of a pair.We denote $Prob(A, B)$ as the probability of inversion of A and B.
+
+Essentially, in the best case $Prob(A[k], A[k+1])=0$ and in the worst case $Prob(A[k], A[k+1])=1$.
+
+Therefore, we assume that $Prob(A[k],A[k+1])=0.5$ in the average case.
+
+Thus, In each outer loop, the times of inversion will be the half of that in the worst case. Based on this, we get:
+$$
+\displaystyle T(n) = \frac{1}{2}[(n-1) + (n-2) + (n-3) + ... + 1] = \frac{1}{2}\sum_{i=1}^{n-1}i = \frac{n(n-1)}{4}
+$$
+Finally, the average case is $O(n^2)$.
+
+%空间复杂度
+\textbf{Space Complexity: }$O(1)$
+
+The extra space is for $i, j, sorted$, thus the space complexity is $O(1)$.
+\end{solution}
+
 \item For Alg.~\ref{Alg-quicksort}, how to modify the algorithm to achieve the same expected performance as the \textbf{average} case when the \textbf{worst} case happens?
 \end{enumerate} 
-%    \begin{solution}
-%       Uncomment this block to write your proof.
-%    \end{solution}
+
+    \begin{solution}
+    ~\\
+The worst case is caused by the bad choice of pivot. Therefore, to improve the worst case, we can use a new algorithm to choose an efficient pivot. 
+
+Naturally, the time complexity should be linear and the algorithm would better choose the median number as the pivot.
+
+Based on the idea, we propose the algorithm $ChoosePivot$.
+
+% 新算法来选择pivot
+\begin{algorithm}[H]
+		\KwIn{An array $A[1,\cdots,n]$, p, q(p+2\leq q)}
+		\KwOut{$A[1,\cdots,n]$, $pivot$}
+		
+		\BlankLine
+		\caption{ChoosePivot}\label{Alg-pivot}
+		
+		%\If{$n \le 1$}{
+		%  \Return\;
+		%}
+		
+		$pivot \leftarrow q$\;
+		$m \leftarrow 0$\;
+		$n \leftarrow 0$\;
+		
+		\For{$j\leftarrow p$ \KwTo $q-1$}{
+			\If{ $A[j] < A[pivot]$} {
+				$L[m] = A[j]$\;
+				$m\leftarrow m+1$\;
+			}
+			\If{ $A[j] \geq A[pivot]$} {
+				$R[n] = A[j]$\;
+				$n\leftarrow n+1$\;
+			}	
+		}
+		
+		
+		swap $A[i]$ and $A[n]$\;
+		\lIf{$i>1$}{$\operatorname{QuickSort}(A[1,\cdots,i-1])$}
+		\lIf{$i<n$}{$\operatorname{QuickSort}(A[i+1,\cdots,n])$}
+	\end{algorithm}
+
+
+
+
+
+    \end{solution}
+
 
 \item \textit{Growth Analysis.} Rank the following functions by order of growth with brief explanations: that is, find an arrangement $g_1, g_2, \ldots , g_{15}$ of the functions $g_1 = \Omega(g_2), g_2 = \Omega(g_3), \ldots, g_{14} = \Omega(g_{15})$.  Partition your list into equivalence classes such that functions $f(n)$ and $g(n)$ are in the same class if and only if $f(n) = \Theta(g(n))$. Use symbols ``$=$'' and ``$\prec$'' to order these functions appropriately. Here $\log n$ stands for $\ln n$.
 $$
@@ -156,9 +326,58 @@ $$
 	\log (n!) \quad & \quad n! \quad & \quad (2n)! \quad & \quad  n^{1/2} \quad & \quad n^2 \\
 \end{array}
 $$
-%    \begin{solution}
-%       Uncomment this block to write your proof.
-%    \end{solution}
+
+\begin{solution}
+~\\
+$$
+1 \prec log(logn) \prec log_4n\prec logn \prec n^{\frac{1}{2}} \prec n \prec 2^{logn} \prec log(n!) \prec nlogn \prec n^2 \prec 2^n \prec 4^n \prec n! \prec (2n)! \prec 2^{2^n}
+$$
+
+\textbf{Explain:}
+
+(1)
+$$
+2^{logn} = 2^{log_2n \cdot log2} = n2^{log2}
+$$
+Thus:
+$$
+n\prec2^{logn}\prec nlogn
+$$
+(2)
+$$
+4^n = 2^{2n} \prec 2^{2^n}
+$$
+
+(3)
+$$
+\frac{(2n+2)! }{(2n)!}=(2n+2)(2n+1)
+$$
+$$
+\frac{2^{2^{n+1}}}{2^{2^n}} = 2^{2^n}
+$$
+Thus:
+$$
+(2n)!\prec 2^{2^n}
+$$
+(4)
+
+For $n$ and $log(n!)$, turn them into $e^n$ and $n!$.
+
+Because $e^n\prec n!$, we get $n\prec log(n!)$.
+
+For $nlogn$ and $log(n!)$, turn them into $n^n$ and $n!$.
+
+Because $n!\prec n^n$, we get $log(n!) \prec nlogn$.
+
+For $2^{logn}$ and $log(n!)$, turn them into $logn$ and $log_2(log(n!)) =log_2e \cdot log(log(n!))$.
+
+Because $n\prec log(n!)$, we get $2^{logn}\prec log(n!)$.
+
+Finally, we get:
+$$
+2^{logn}\prec log(n!) \prec nlogn
+$$
+ \end{solution}
 
 
 \end{enumerate}
