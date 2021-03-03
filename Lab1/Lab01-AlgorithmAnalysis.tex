@@ -272,39 +272,34 @@ The extra space is for $i, j, sorted$, thus the space complexity is $O(1)$.
 
     \begin{solution}
     ~\\
-The worst case is caused by the bad choice of pivot. Therefore, to improve the worst case, we can use a new algorithm to choose an efficient pivot. 
+The worst case is caused by the bad choice of pivot. During the worst case, the array is sorted originally, which made QuickSort fails ti divide and conquer. Therefore, to improve the worst case, we can use a new way to choose an efficient pivot. 
 
-Naturally, the time complexity should be linear and the algorithm would better choose the median number as the pivot.
+This way can be random choice or median number choice.
 
-Based on the idea, we propose the algorithm $ChoosePivot$.
+In our new improved algorithm, we use the random choice.
+
 
 % 新算法来选择pivot
 \begin{algorithm}[H]
-		\KwIn{An array $A[1,\cdots,n]$, p, q(p+2\leq q)}
-		\KwOut{$A[1,\cdots,n]$, $pivot$}
+		\KwIn{An array $A[1,\cdots,n]$}
+		\KwOut{$A[1,\cdots,n]$ sorted nondecreasingly}
 		
 		\BlankLine
-		\caption{ChoosePivot}\label{Alg-pivot}
+		\caption{QuickSortImproved}\label{Alg-quicksort2}
 		
 		%\If{$n \le 1$}{
 		%  \Return\;
 		%}
-		
-		$pivot \leftarrow q$\;
-		$m \leftarrow 0$\;
-		$n \leftarrow 0$\;
-		
-		\For{$j\leftarrow p$ \KwTo $q-1$}{
-			\If{ $A[j] < A[pivot]$} {
-				$L[m] = A[j]$\;
-				$m\leftarrow m+1$\;
+		$n_{pivot} =  RANDOM(1, n)$\;
+		$pivot \leftarrow A[n_{pivot}]$\; 
+		swap $A[n]$ and $A[n_{pivot}]$\;
+		$i \leftarrow 1$\;
+		\For{$j \leftarrow 1$ \KwTo $n-1$}{
+			\If{$A[j] < pivot$}{
+				swap $A[i]$ and $A[j]$\;
+				$i \leftarrow i+1$\;
 			}
-			\If{ $A[j] \geq A[pivot]$} {
-				$R[n] = A[j]$\;
-				$n\leftarrow n+1$\;
-			}	
 		}
-		
 		
 		swap $A[i]$ and $A[n]$\;
 		\lIf{$i>1$}{$\operatorname{QuickSort}(A[1,\cdots,i-1])$}
