@@ -4,3 +4,6 @@ books/
 *.log
 *.aux
 *.gz
+
+*.zip
+*.rar

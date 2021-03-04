@@ -264,7 +264,7 @@ Finally, the average case is $O(n^2)$.
 %空间复杂度
 \textbf{Space Complexity: }$O(1)$
 
-The extra space is for $i, j, sorted$, thus the space complexity is $O(1)$.
+The extra space is for the variables $i, j, sorted$, thus the space complexity is $O(1)$.
 \end{solution}
 
 \item For Alg.~\ref{Alg-quicksort}, how to modify the algorithm to achieve the same expected performance as the \textbf{average} case when the \textbf{worst} case happens?
@@ -272,12 +272,19 @@ The extra space is for $i, j, sorted$, thus the space complexity is $O(1)$.
 
     \begin{solution}
     ~\\
-The worst case is caused by the bad choice of pivot. During the worst case, the array is sorted originally, which made QuickSort fails ti divide and conquer. Therefore, to improve the worst case, we can use a new way to choose an efficient pivot. 
+The worst case is caused by the bad choice of pivot. During the worst case, the array is sorted originally, which made QuickSort fails to divide and conquer. Therefore, to improve the worst case, we can use a new way to choose an efficient pivot. 
 
-This way can be random choice or median number choice.
+Naturally, this way can be \textbf{random choice} or \textbf{median number choice}.
 
-In our new improved algorithm, we use the random choice.
+However, the former method can not perfectly improve the worst case.
 
+For \textbf{random choice}, there still exists the probability that each choice is the worst one, leading to the failure of improvements, hough this algorithm is exactly designed for adding some unstability.
+
+For \textbf{median number choice}, we can achieve a linear time complexity $O(n)$ when running this algorithm. This algorithm is also called \textbf{Median of Medians}. For this algorithm is slightly complex, I may refer to Wikipedia, and this is \href{https://en.wikipedia.org/wiki/Median_of_medians#Proof_of_O(n)_running_time}{the link of the total process}.
+		
+The algorithm has the form $select(array, left, right, k)$.Note that this returns the index of the k'th largest number after rearranging the list, rather than the actual value of the k'th largest number.
+
+In our new improved algorithm, we utilize the advanced algorithm .
 
 % 新算法来选择pivot
 \begin{algorithm}[H]
@@ -290,7 +297,7 @@ In our new improved algorithm, we use the random choice.
 		%\If{$n \le 1$}{
 		%  \Return\;
 		%}
-		$n_{pivot} =  RANDOM(1, n)$\;
+		$n_{pivot} =  select(A, left=1, right=n, k=\lfloor \frac{1+n}{2}\rfloor)$ \;
 		$pivot \leftarrow A[n_{pivot}]$\; 
 		swap $A[n]$ and $A[n_{pivot}]$\;
 		$i \leftarrow 1$\;
@@ -325,7 +332,7 @@ $$
 \begin{solution}
 ~\\
 $$
-1 \prec log(logn) \prec log_4n\prec logn \prec n^{\frac{1}{2}} \prec n \prec 2^{logn} \prec log(n!) \prec nlogn \prec n^2 \prec 2^n \prec 4^n \prec n! \prec (2n)! \prec 2^{2^n}
+1 \prec log(logn) \prec log_4n= logn \prec n^{\frac{1}{2}} \prec n = 2^{logn} \prec log(n!) \prec nlogn \prec n^2 \prec 2^n \prec 4^n \prec n! \prec (2n)! \prec 2^{2^n}
 $$
 
 \textbf{Explain:}
@@ -336,7 +343,7 @@ $$
 $$
 Thus:
 $$
-n\prec2^{logn}\prec nlogn
+n = 2^{logn}\prec nlogn
 $$
 (2)
 $$
@@ -349,6 +356,9 @@ $$
 $$
 $$
 \frac{2^{2^{n+1}}}{2^{2^n}} = 2^{2^n}
+$$
+$$
+\lim_{n\rightarrow \infty}\frac{(2n+2)(2n+1)}{2^{2^n}} = 0
 $$
 Thus:
 $$
@@ -372,6 +382,20 @@ Finally, we get:
 $$
 2^{logn}\prec log(n!) \prec nlogn
 $$
+
+(5)
+$$
+log_4n =log_n\cdot log_4e
+$$
+$$
+\lim_{n\rightarrow \infty}\frac{log_4n}{logn} = log_4e
+$$
+
+Thus:
+$$
+log_4n = logn
+$$
+
  \end{solution}
 
 
