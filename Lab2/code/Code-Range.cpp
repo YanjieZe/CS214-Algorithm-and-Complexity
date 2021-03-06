@@ -15,6 +15,19 @@ int binary_search_for_m(vector<long>& sum, long sum_i, int LOWER, int low, int h
 	using binary search. If not found,
 	return high.
 	*/
+	int mid = (low+high)/2;
+	if(mid==low)
+		if(sum[mid]-sum_i>=LOWER)
+			return mid;
+		else 
+			return high;
+	
+	if(sum[mid]-sum_i==LOWER)
+		return mid;
+	else if(sum[mid]-sum_i<LOWER)
+		return binary_search_for_m(sum, sum_i, LOWER, mid+1, high);
+	else 
+		return binary_search_for_m(sum, sum_i, LOWER, low, mid);
 }
 
 int binary_search_for_n(vector<long>& sum, long sum_i, int UPPER, int low, int high) {
@@ -24,6 +37,17 @@ int binary_search_for_n(vector<long>& sum, long sum_i, int UPPER, int low, int h
 	using binary search. If not found,
 	return high.
 	*/
+	int mid = (low+high)/2;
+	if(mid==low)
+		if(sum[mid]-sum_i>UPPER)
+			return mid;
+		else 
+			return high;
+	
+	if(sum[mid]-sum_i<=UPPER)
+		return binary_search_for_n(sum, sum_i, UPPER, mid+1, high);
+	else 
+		return binary_search_for_n(sum, sum_i, UPPER, low, mid);
 }
 
 int merge_count(vector<long>& sum, int low, int high, int LOWER, int UPPER) {
