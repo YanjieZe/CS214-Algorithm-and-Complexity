@@ -47,7 +47,7 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 \begin{center}
 \footnotesize{\color{red}$*$ If there is any problem, please contact TA Haolin Zhou. }
 
-\footnotesize{\color{blue}$*$ Name:\_\_\_\_\_\_\_\_\_  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\footnotesize{\color{blue}$*$ Name:Yanjie Ze  \quad Student ID:519021910706 \quad Email: zeyanjie@sjtu.edu.cn}
 \end{center}
 
 \begin{enumerate}
@@ -59,9 +59,67 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 	\item $T(n)=T(n-1)+n$	
 	\item $T(n)=2T(\lfloor \sqrt n\rfloor)+\log n$
 \end{enumerate}
-%\begin{solution}
-	%response...
-%\end{solution}
+\begin{solution}
+\begin{enumerate}
+% 第一题
+\item 
+Because $n<nlogn<n^2$, and we denote: 
+$$T_1(n)=4 T(n / 3)+n$$
+$$T_2(n)=4 T(n / 3)+n^2$$
+Based on Master Theorem, we have:
+$$
+T_1(n)=O(n^{log_34})
+$$
+$$
+T_2(n)=O(n^2)
+$$
+Therefore:
+$$
+T(n)=O(n^2), T(n)=\Omega(n^{log_34})
+$$
+\item
+ $$
+ T(n)=4 T(n / 2)+n^{2} \sqrt{n}=4 T(n / 2)+n^{\frac{5}{2}} 
+ $$
+ Based on Master Theorem, $a=4, b=2, d=\frac{5}{2}$,we have:
+ 
+ $$
+ T(n) = O(n^\frac{5}{2})
+ $$
+ 
+ \item
+ $$
+ \displaystyle T(n)=\sum_{i=1}^ni+T(0) = \frac{n^2+n}{2}+T(0)
+ $$
+ Thus:
+ $$
+ T(n)=\Omega(n^2)
+ $$
+ 
+ \item
+Assume $n=2^{2^k}$, then $k=log_2(log_2n)$. 
+
+$$
+T(2^{2^k}) = 2T(2^{2^{k-1}})+2^klog2
+$$
+$$
+\frac{T(2^{2^k})}{2^k} = \frac{T(2^{2^{k-1}})}{2^{k-1}}+log2
+$$
+Thus we can sum them together and get:
+$$
+ \frac{T(2^{2^k})}{2^k} = (k-1)log2 + T(2)
+$$
+Multiply both sides by $2^k$ and then replace $k$ by $n$:
+$$
+T(n) = log2\cdot log_2n\cdot log_2(log_2n)+ T(2)\cdot log_2n
+$$
+Therefore:
+$$
+T(n) = \Theta(logn\cdot log(logn))
+$$
+
+\end{enumerate}
+\end{solution}
 \item
 \textit{Divide-and-conquer.} Given an integer array $A[1..n]$ and two integers $lower \le upper$, design an algorithm using \textbf{divide-and-conquer} method to count the number of ranges $(i,j)$ ($1 \leq i \leq j \leq n$) satisfying
 $$
@@ -81,9 +139,16 @@ Write a recurrence for the running time of the algorithm and solve it by recurre
 \item
 Can we use the Master Theorem to solve the recurrence above? Please explain your answer.
 \end{enumerate}
-%\begin{solution}
-%response...
-%\end{solution}
+
+%第二题
+\begin{solution}
+\begin{enumerate}
+\item
+$$
+T(n) = 2T(\frac{n}{2}) + nlogn
+$$
+\end{enumerate}
+\end{solution}
 \item
 \textit{Transposition Sorting Network.} A comparison network is a \textbf{transposition network}  if each comparator connects adjacent lines, as in the network in Fig. ~\ref{Fig-Transposition}.
 
