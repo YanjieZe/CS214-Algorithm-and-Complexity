@@ -15,7 +15,7 @@ int binary_search_for_m(vector<long>& sum, long sum_i, int LOWER, int low, int h
 	using binary search. If not found,
 	return high.
 	*/
-	int mid = (low+high)/2;
+	int mid = (low+high-1)/2;
 	if(mid==low)
 		if(sum[mid]-sum_i>=LOWER)
 			return mid;
@@ -37,7 +37,7 @@ int binary_search_for_n(vector<long>& sum, long sum_i, int UPPER, int low, int h
 	using binary search. If not found,
 	return high.
 	*/
-	int mid = (low+high)/2;
+	int mid = (low+high-1)/2;
 	if(mid==low)
 		if(sum[mid]-sum_i>UPPER)
 			return mid;
