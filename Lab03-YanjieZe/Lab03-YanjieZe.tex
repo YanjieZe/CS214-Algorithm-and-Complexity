@@ -52,7 +52,7 @@ CS214-Algorithm and Complexity, Xiaofeng Gao, Spring 2021.}}
 \begin{center}
 \footnotesize{\color{red}$*$ If there is any problem, please contact TA Haolin Zhou.}\par
 % Please write down your name, student id and email.
-\footnotesize{\color{blue}$*$ Name:\_\_\_\_\_\_\_\_\_  \quad Student ID:\_\_\_\_\_\_\_\_\_ \quad Email: \_\_\_\_\_\_\_\_\_\_\_\_}
+\footnotesize{\color{blue}$*$ Name:Yanjie Ze  \quad Student ID:519021910706 \quad Email: zeyanjie@sjtu.edu.cn}
 \end{center}
 
 \begin{enumerate}
@@ -255,15 +255,86 @@ The algorithm.~\ref{alg cover} \textbf{Greedy Cover Set} takes greedy strategy. 
 		}
 		}
 	\end{algorithm}
+~\\
+
+While finding the interval's cover sets, we use a loop to scan through $\{a_i, a_{i+1}, ..., a_{n}\}$ and this loop will stop when finding $a_{i+m+1}$ exceed the interval. 
+
+\textbf{To illustrate this process}, we use the data in (c) and simulate the process. Fig.~\ref{explain2}  show the process that the intervals are counted by the order.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{explain2.jpg}
+    \caption{Greedy Cover Set}\label{explain2}
+\end{figure}
+
+~\\
+\textbf{Worst-case Complexity:}
+
+We use $QuickSort$ to sort the coordinates of points, whose worst-case time complexity is $O(n^2)$ when the pivot of $QuickSort$ fails to divide and conquer. The space complexity is $O(logn)$.
+
+In the $while$ loop, the algorithm is actually traversing all the points for one time. Therefore, the worst case, the average case and the best case are equal, all $O(n)$. The space complexity is $O(1)$.
+
+\textbf{In conclusion, the time complexity in the worst case is $O(n^2)$, and the space complexity is $O(logn)$.}
+
+\item
+\textbf{Theorem:} Greedy Cover Set is optimal with fixed length $k$.
+~\\
+
+\textbf{Proof:}
+Since the algorithm simply selects the point not covered in order as the start of an interval and then the following process is natural, we should prove the optimal solution also \textbf{takes the same action when choosing an interval}.
+~\\
+
+\textbf{Assume} the optimal solution does not act the same as the greedy at interval $q$, where $q$ is the smallest number that the two solutions are different.
+
+Then there are two cases:
+
+\textbf{Case 1:} The intervals $q$ in two solutions both cover the same number of points. 
+
+In this case, the optim and the greedy will perform similar function.
+
+However, there are slight differences between the two. 
+
+As shown in Fig.~\ref{explain4}, the greedy can leave more space for other points. Though the extra space is not utilized, this illustrates the wider range of exploration by Greedy Cover Set.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{explain4.jpg}
+    \caption{Cover Set Case 1}\label{explain4}
+\end{figure}
+
+~\\
+\textbf{Case 2:} The intervals $q$ in the greedy covers more points than that in the optim.
+
+As shown in Fig.~\ref{explain3}, the greedy utilizes the length best and can have more points covered, while for the optim, it has wasted some space before.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{explain3.jpg}
+    \caption{Cover Set Case 2}\label{explain3}
+\end{figure}
+
+
+\textbf{In conclusion}, in case 1 the greedy works the same or even better than the optim, and in case 2 the greedy works better than the optim. Therefore, the assumption is false, which is to say, \textbf{Greedy Cover Set} is optimal.
+
+
+
+\item
+The code is in \textbf{Code-SetCover.cpp}, and the result is shown in Fig.~\ref{code}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{code.png}
+    \caption{Code Result}\label{code}
+\end{figure}
 \end{enumerate}
+
+\end{enumerate}
+
  \end{solution}
 
-\item
-
-\item
 
 
-\end{enumerate}
+
 
 
 
