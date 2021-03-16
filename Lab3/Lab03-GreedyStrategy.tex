@@ -6,6 +6,9 @@
 \usepackage{mathrsfs,euscript}
 \usepackage[usenames]{xcolor}
 \usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+
 \usepackage[vlined,ruled,linesnumbered]{algorithm2e}
 \hypersetup{colorlinks=true,linkcolor=black}
 
@@ -65,7 +68,7 @@ Similarly, let $j_1, j_2,...,j_m$ denote set of jobs in an optimal solution in a
 
 \textbf{Case 1:}
 
-If $j_{r+1}$'s starting time is earlier than $i_{r+1}$,as showed in Fig.~\ref{case1}, then the optim  choice should be the greedy one rather than this one, since the greedy choice will leave more time for the jobs before, which is more likely to have the most jobs. 
+If $j_{r+1}$'s starting time is earlier than $i_{r+1}$,as showed in Fig.~\ref{case1}, then the optimal  choice should be the greedy one rather than this one, since the greedy choice will leave more time for the jobs before, which is more likely to have the most jobs. 
 
 \begin{figure}[htbp]
     \centering
@@ -75,7 +78,7 @@ If $j_{r+1}$'s starting time is earlier than $i_{r+1}$,as showed in Fig.~\ref{ca
 
 \textbf{Case 2:}
 
-If $j_{r+1}$'s starting time is later than $i_{r+1}$,as showed in Fig.~\ref{case2}, then the greedy choice should be the same as the optim one rather than this one. It's because the algorithm selects the later starting time.
+If $j_{r+1}$'s starting time is later than $i_{r+1}$,as showed in Fig.~\ref{case2}, then the greedy choice should be the same as the optimal one rather than this one. It's because the algorithm selects the later starting time.
 
 \begin{figure}[htbp]
     \centering
@@ -95,9 +98,123 @@ If $j_{r+1}$'s starting time is later than $i_{r+1}$,as showed in Fig.~\ref{case
 		i.e., the values are $c^{0}, c^{1}, \ldots, c^{k}$ for some integers $c>1$ and $k \geq 1$. Show that the greedy algorithm always yields an optimal solution.
 		\item Give a set of contract sizes for which the greedy algorithm does not yield an optimal solution. Your set should include a $ 1M $ so that there is a solution for every value of $ n $.
 	\end{enumerate}
-%    \begin{solution}
-%        Uncomment this block to write your solution.
-%    \end{solution}
+	
+   \begin{solution}
+   ~\\
+   
+   \begin{enumerate}
+ 
+   \item
+   The algorithm is showed in Alg.~\ref{alg greedy}. This is actually the same policy used in \textbf{Coin Changing} problem. In each turn we select the largest contract that is smaller than $n$ and finally we will get the deal.
+   
+   \begin{algorithm}[H]
+   \caption{Greedy Algorithm}\label{alg greedy}
+		Sort contracts denominations by value: $c_1=1, c_2=5, c_3=10, c_4=25$.\;
+		$S\leftarrow \emptyset$\;
+		$x\leftarrow n$\;
+		\While{$x\neq0$}{
+		let $k$ be largest integer such that $c_k < x$\;
+		$x\leftarrow x-c_k$\;
+		$S\leftarrow S\cup \{k\}$\;
+		}
+		\Return $S$\;
+		
+	\end{algorithm}
+~\\	
+\textbf{Theorem.}Greedy algorithm is optimal for Done Deal Problem.
+
+\textbf{Proof.}
+
+First we introduce several properties in this problem.
+\begin{itemize}
+\item \textbf{Property 1.} Number of $c_1\leq4$.
+
+\textbf{Proof.} Replace 5 $c_1$ with 1 $c_2$.
+
+\item \textbf{Property 2.} Number of $c_2\leq 1$.
+
+\textbf{Proof.} Replace 2 $c_2$ with 1 $c_3$.
+
+\item \textbf{Property 3.} Number of $c_3\leq2$.
+
+\textbf{Proof.} Replace 3 $c_3$ with 1 $c_4$ and 1 $c_2$.
+
+\item \textbf{Property 4.} Number of $c_2$ + Number of $c_3$ $\leq2$
+
+\textbf{Proof.} From \textbf{Property 2 \& 3}, there is only one case not proved, which is Number of $c_2=1$ and Number of $c_3=2$.
+
+Replace them with 1 $c_4$.
+
+\end{itemize}
+
+Second, we prove the algorithm is greedy.
+
+(By induction on $n$)Consider an optimal way to deal with $c_k<n<c_{k+1}$ and the greedy sells the contract $c_k$. We claim that any optimal solution must also  sells the contract $c_k$.
+
+If not, it needs enough contracts of type $c_1, ...,c_{k-1}$ to add up to $n$.
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+$k$ & $c_k$ & Restriction &Max value of contracts 1,2,..k-1 in any OPT\\
+\hline
+1 & 1 & Property 1 & -\\
+\hline
+2 & 5 &Property 1\& 2 &4\\
+\hline
+3 & 10 &Property 1\&2\&3\&4 & 4$\times$1+5= 9\\
+\hline
+4 & 25 &Property 1\&2\&3\&4 & 2$\times$10+4$\times$1=24\\
+\hline
+\end{tabular}
+
+Then the problem reduces to deal with $n-c_k$, which, by induction, is optimally solved by greedy algorithm.
+
+\item
+
+\textbf{Proof:}
+
+
+(By induction on $n$)Consider an optimal way to deal with $c^p<n<c^{p+1}, p=0,1,...k$ and the greedy sells the contract $c^p$. We claim that any optimal solution must also  sells the contract $c^p$.
+~\\
+
+\textbf{Property 1.} $ c^{p+1} \geq 2\times c^{p}$
+
+\textbf{Proof.} Integer $c>1$ means $c\geq2$. So $c^{p+1}=c^p\times c\geq 2\times c^p$.
+~\\
+
+If the optimal solution doesn't select $c^p$, then it needs enough contracts to sum up to $n$. From \textbf{Property 1}, we know that it at least needs 2 contract $c^{p-1}$ to compensate for not selecting $c^p$. This is unvoidable because it can not use $c^{p+1}$. Therefore, the optimal solution must select $c^p$, which is greedy.
+
+Then the problem reduces to deal with $n-c^p$, which, by induction, is optimally solved by greedy algorithm.
+
+\item
+The set can simply be: $\{1M, 6M, 10M, 25M\}$.
+
+For example, if $n=12$:
+
+By $Greedy\ Algorithm$, the contract set would be $\{10M, 1M, 1M\}$.
+
+However, the optimal solution is $\{6M, 6M\}$.
+
+\textbf{Explanation:}
+
+By my observation, if the element of the contracts does not satisfy \textbf{Property 1} in the \textbf{problem b}(shown below), the greedy algorithm can not work. 
+
+~\\
+\textbf{Property 1.} $c_{k+1}\geq 2\times c_{k}$
+~\\
+
+The intuitive proof is shown in Fig.~\ref{explain}. If $c_k$ and $c_{k+1}$, two adjacent contracts, can not satisfy a relationship that is shown in \textbf{Property 1}, the greedy choice may fail to reduce the total number of contracts. In Fig.~\ref{explain}, the left is when the greedy algorithm works and the right is when it does not work. When $c_k$ and $c_{k+1}$ can not satisfy \textbf{Property 1}, the greedy algorithm needs at least one contract to replace two $c_k$, possibly two or more. \textbf{This is not optimal.}
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{explain.jpg}
+    \caption{When Greedy Algorithm Works?}\label{explain}
+\end{figure}
+
+\end{enumerate}
+    \end{solution}
 	
     \item \textit{Set Cover.} \textbf{Set Cover} is a typical kind of problems that can be solved by greedy strategy. One version is that: Given $n$ points on a straight line, denoted as $\{x_i\}_{i=1}^n$, and we intend to use minimum number of closed intervals with fixed length $k$ to cover these $n$ points.
     \begin{enumerate}
@@ -113,9 +230,38 @@ If $j_{r+1}$'s starting time is later than $i_{r+1}$,as showed in Fig.~\ref{case
     	\end{enumerate}
         \textbf{Remark}: Screenshots of running results are also acceptable 
     \end{enumerate}
-%    \begin{solution}
-%        Uncomment this block to write your solution.
-%    \end{solution}
+    
+   \begin{solution}
+   
+\begin{enumerate}
+\item
+~\\
+The algorithm.~\ref{alg cover} \textbf{Greedy Cover Set} takes greedy strategy. To make the number of intervals small as far as possible, each interval begins at a point. This algorithm is intuitively like \textbf{Sliding Window}.
+
+\begin{algorithm}[H]
+   \caption{Greedy Cover Set}\label{alg cover}
+		Sort Input points' coordinates by increasing order:$\{a_1, a_2,...,a_n\}$\;
+		$i:=1, num:=0$\;
+		\While{$i<n$}{
+		$\{a_i, a_{i+1},...,a_{i+m}\} = interval[a_i, a_i+k]\ cover$\;
+		$num++ $\;
+		$i:=i+m$\;
+		\If{$i==n$}{
+		\Return num\;
+		}
+		$i++$\;
+		\If{$i==n$}{
+		\Return num+1\;
+		}
+		}
+	\end{algorithm}
+\end{enumerate}
+ \end{solution}
+
+\item
+
+\item
+
 
 \end{enumerate}
 

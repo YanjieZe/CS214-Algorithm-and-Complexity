@@ -26,10 +26,36 @@ void quickSort(int s[], int l, int r)
 
 int Greedy(int x[], int k, int n)
 {
-    /*
-    Please write your Greedy function here.
-    If you want to use sorting, please use the quickSort function above.
-    */
+    quickSort(x, 0, n-1);
+    int i=0, num=0;
+
+    //for(int i=0;i<7;++i)cout<<x[i]<<'\n';
+
+    while(i<n-1)
+    {
+        int a_i = i;
+        int interval = x[i] + k;
+        int m=0;
+        while(i<n-1)
+        {   
+            i++;
+            if(x[i]<=interval)
+                {              
+                    m++;
+                }
+            else {
+                break;
+            }
+        }
+        num++;
+        i=a_i+m;
+        if(i==n-1)
+            return num;
+        i++;
+        if(i==n-1)
+            return num+1;      
+    }
+    return 0;  
 }
 
 int main()
@@ -37,7 +63,7 @@ int main()
     //x is the point set P with n=7 nodes in total, and the length of intervals is k=3.
     int x[7]={1,2,3,4,5,6,-2};
     int k=3;
-    int n=sizeof(x) / sizeof(x[0]);
+    int n= sizeof(x) / sizeof(x[0]);
     int num_interval=Greedy(x,k,n);
     cout << num_interval << endl;
     return 0;
