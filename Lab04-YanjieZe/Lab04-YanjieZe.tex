@@ -69,7 +69,17 @@ $A\subset B$, so $(V, E\backslash A)$ is connected too.
 Therefore, $A\in C$.
 ~\\
 
-{\color{blue}Exchange Property}: Denote two subsets $A, B\in C$, $|A| < |B|$. Assume edge $x\in B, x\notin A$. Then:$E\backslash (A\cup \{x\}) = E\backslash A) \cup E\backslash \{x\}$
+{\color{blue}Exchange Property}: Denote two subsets $A, B\in C$, $|A| < |B|$. Assume $\{e_1,e_2,...,e_k\}=B/A,k\geq 1$. Denote $G_A = (V, E\backslash A), G_B = (V, E\backslash B)$, and they are connected. 
+
+Since $|A|<|B|$, there's at least one cycle in $G_A$. What's more, $G_B$ must have removed some edges(at least one) that are in a cycle of $G_A$, from $\{e_1,e_2,...,e_k\}$, as shown in Fig.~\ref{exp2}(1). If the edges from $\{e_1,e_2,...,e_k\}$ are not in a cycle of $G_A$, which is to say, $G_B$ removes the cut edge in $G_A$, then $G_A$ must have done the same thing, and this will lead to $|A|=|B|$, as shown in Fig~\ref{exp2}(2).
+
+So we can select the edge with {\color{red}red cross} in Fig~\ref{exp2}(1), denoting as $e$. $A\cup \{e\}$ satisfies that $(V,E\backslash (A\cup \{e\}))$ is connected.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{explain2.jpg}
+    \caption{Graph Matroid Exchange Property}\label{exp2}
+\end{figure}
 
 	   \end{proof}
 	\item
