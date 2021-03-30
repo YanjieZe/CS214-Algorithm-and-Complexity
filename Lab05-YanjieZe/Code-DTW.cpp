@@ -12,20 +12,32 @@ For the sake of simplicity, when the cost is equal, the priority of the selectio
 4.Calculate th time normalized distance. We define it as the average cost of the selected points.
 */
 using namespace std;
+
+
+
 double distance(vector<int> x, vector<int> y) {
     int n = x.size();
     int m = y.size();
-    vector<vector<int>> DTW;
+    
+    vector<vector<int> > DTW(n);
+    
     //Use the given state transition function to fill in the cost matrix.
-    /*
-    Please write your code here.
-    */
+    for(int i=0;i<=n;++i)
+        DTW[i].push_back(abs(x[i])); // DTW[i,0]
+    for(int j=0;j<=m;++j)
+        DTW[0].push_back
+    for(int i=0;i<=n;++i)
+        for(int j=0;j<=m;++j)
+            {
+
+            }
 
     vector<int> d;
     //Identify the warping path.
-    /*
-    Please write your code here.
-    */
+    int mid = m/2;
+    // find divide q
+    for(int i=0;i<n;++i)
+
 
     double ans = 0;
     //Calculate th time normalized distance
@@ -35,15 +47,29 @@ double distance(vector<int> x, vector<int> y) {
     return ans;
 }
 
+
+
 int main(){
 	vector<int> X,Y;
 	//test case 1
-	X = {37,37,38,42,25,21,22,33,27,19,31,21,44,46,28};
-	Y = {37,38,42,25,21,22,33,27,19,31,21,44,46,28,28};
+	int array1[] = {37,37,38,42,25,21,22,33,27,19,31,21,44,46,28};
+	int array2[] ={37,38,42,25,21,22,33,27,19,31,21,44,46,28,28};
+    
+    for(int i=0;i<15;++i)
+        X.push_back(array1[i]), Y.push_back(array2[i]);
+        
 	cout<<distance(X,Y)<<endl;
+  
 	//test case 2
-	X = {11,14,15,20,19,13,12,16,18,14};
-	Y = {11,17,13,14,11,20,15,14,17,14};
+	int array3[] = {11,14,15,20,19,13,12,16,18,14};
+	int array4[] = {11,17,13,14,11,20,15,14,17,14};
+
+    X.clear();
+    Y.clear();
+
+    for(int i=0;i<10;++i)
+        X.push_back(array1[i]), Y.push_back(array2[i]);
+
 	cout<<distance(X,Y)<<endl;
 	//Remark: when you modify the code to add the window constraint, the distance function has thus three inputs: X, Y, and the size of window w.
 	return 0;
