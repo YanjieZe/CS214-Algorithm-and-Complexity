@@ -33,7 +33,7 @@ int min3(int a, int b, int c)
 
 }
 
-double distance(vector<int> x, vector<int> y) {
+double distance(vector<int> x, vector<int> y, int window_constraint) {
     int n = x.size();
     int m = y.size();
     
@@ -59,6 +59,8 @@ double distance(vector<int> x, vector<int> y) {
     for(int j=0;j<m;++j)
         for(int i=0;i<n;++i)
         {
+            if(abs(i-j)>window_constraint)
+                continue;
             if(i==0)
                 a=-1;
             else
@@ -134,6 +136,7 @@ double distance(vector<int> x, vector<int> y) {
 
 
 int main(){
+    int window_constraint = 1;
 	vector<int> X,Y;
 	//test case 1
 	int array1[] = {37,37,38,42,25,21,22,33,27,19,31,21,44,46,28};
@@ -144,7 +147,7 @@ int main(){
 
     //cout<<min3(-1,1,2)<<endl;   
 
-	cout<<distance(X,Y)<<endl;
+	cout<<distance(X,Y, window_constraint)<<endl;
     
 	//test case 2
 	int array3[] = {11,14,15,20,19,13,12,16,18,14};
@@ -156,7 +159,7 @@ int main(){
     for(int i=0;i<10;++i)
         X.push_back(array3[i]), Y.push_back(array4[i]);
 
-	cout<<distance(X,Y)<<endl;
+	cout<<distance(X, Y, window_constraint)<<endl;
 	//Remark: when you modify the code to add the window constraint, the distance function has thus three inputs: X, Y, and the size of window w.
 	return 0;
 }
