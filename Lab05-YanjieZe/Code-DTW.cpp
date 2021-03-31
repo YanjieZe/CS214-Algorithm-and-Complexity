@@ -92,7 +92,8 @@ double distance(vector<int> x, vector<int> y, int window_constraint) {
   
     while(i>=0||j>=0)
     {
-        result += cost_matrix[i][j];
+        //result += cost_matrix[i][j];
+        result += DTW[i][j];
         count ++;
 
         //choose direction
@@ -128,6 +129,7 @@ double distance(vector<int> x, vector<int> y, int window_constraint) {
     
 
     //Calculate th time normalized distance
+    count--; // subtract the extra count
     result = result/count ; 
 
     return result;
@@ -137,6 +139,7 @@ double distance(vector<int> x, vector<int> y, int window_constraint) {
 
 int main(){
     int window_constraint = 1;
+    cout<<"window constraint="<<window_constraint<<endl;
 	vector<int> X,Y;
 	//test case 1
 	int array1[] = {37,37,38,42,25,21,22,33,27,19,31,21,44,46,28};
