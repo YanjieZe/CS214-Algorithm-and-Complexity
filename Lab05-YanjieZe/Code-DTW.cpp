@@ -13,38 +13,122 @@ For the sake of simplicity, when the cost is equal, the priority of the selectio
 */
 using namespace std;
 
+int min3(int a, int b, int c)
+{
+    vector<int> tmp;
+    int array[]={a, b,c};
+    for(int i=0;i<3;++i)
+        if(array[i]!=-1)
+            tmp.push_back(array[i]);
+    int s = tmp.size();
+    if(s==0)
+        return 0;
+    if(s==1)
+        return tmp[0];
+    if(s==2)
+        return min(tmp[0],tmp[1]);
+    if(s==3)
+        return min(tmp[2],min(tmp[0],tmp[1]));
+    return 0;
 
+}
 
 double distance(vector<int> x, vector<int> y) {
     int n = x.size();
     int m = y.size();
     
-    vector<vector<int> > DTW(n);
+    vector<vector<int> > DTW(n), cost_matrix(n);
     
     //Use the given state transition function to fill in the cost matrix.
-    for(int i=0;i<=n;++i)
-        DTW[i].push_back(abs(x[i])); // DTW[i,0]
-    for(int j=0;j<=m;++j)
-        DTW[0].push_back
-    for(int i=0;i<=n;++i)
-        for(int j=0;j<=m;++j)
-            {
-
-            }
-
-    vector<int> d;
-    //Identify the warping path.
-    int mid = m/2;
-    // find divide q
     for(int i=0;i<n;++i)
-
-
-    double ans = 0;
-    //Calculate th time normalized distance
-    /*
-    Please write your code here.
+        for(int j=0;j<m;++j)
+        {
+            cost_matrix[i].push_back(abs(x[i] - y[j]));
+            DTW[i].push_back(-1);// initialize
+        }
+    
+  
+    int a,b,c;
+    /* 
+    a: DTW[i-1,j]
+    b: DTW[i,j-1]
+    c: DTW[i-1, j-1]
     */
-    return ans;
+    a=b=c=0;
+
+    for(int j=0;j<m;++j)
+        for(int i=0;i<n;++i)
+        {
+            if(i==0)
+                a=-1;
+            else
+                a=DTW[i-1][j];
+            
+            if(j==0)
+                b=-1;
+            else
+                b=DTW[i][j-1];
+            
+            if(i==0||j==0)
+                c=-1;
+            else
+                c=DTW[i-1][j-1];
+
+            
+            DTW[i][j] = cost_matrix[i][j] + min3(a,b,c);
+            
+        }
+
+
+    //Identify the warping path.
+    //like gradient descent
+    vector<int> path;
+    int i=n-1,j=m-1;
+    int tmp=0;
+    double result = 0;
+    double count = 0;
+  
+    while(i>=0||j>=0)
+    {
+        result += cost_matrix[i][j];
+        count ++;
+
+        //choose direction
+        if(i==0&&j==0)
+            break;
+        if(i==0)
+        {
+            j--;
+            continue;
+        }
+        if(j==0)
+        {
+            i--;
+            continue;
+        }
+        
+        tmp = min3(DTW[i-1][j-1], DTW[i-1][j], DTW[i][j-1]);
+
+        if(tmp==DTW[i-1][j-1])
+        {
+            i--;
+            j--;
+        }
+        else if(tmp==DTW[i-1][j])
+        {
+            i--;
+        }
+        else
+        {
+            j--;
+        }
+    }
+    
+
+    //Calculate th time normalized distance
+    result = result/count ; 
+
+    return result;
 }
 
 
@@ -57,9 +141,11 @@ int main(){
     
     for(int i=0;i<15;++i)
         X.push_back(array1[i]), Y.push_back(array2[i]);
-        
+
+    //cout<<min3(-1,1,2)<<endl;   
+
 	cout<<distance(X,Y)<<endl;
-  
+    
 	//test case 2
 	int array3[] = {11,14,15,20,19,13,12,16,18,14};
 	int array4[] = {11,17,13,14,11,20,15,14,17,14};
@@ -68,7 +154,7 @@ int main(){
     Y.clear();
 
     for(int i=0;i<10;++i)
-        X.push_back(array1[i]), Y.push_back(array2[i]);
+        X.push_back(array3[i]), Y.push_back(array4[i]);
 
 	cout<<distance(X,Y)<<endl;
 	//Remark: when you modify the code to add the window constraint, the distance function has thus three inputs: X, Y, and the size of window w.
