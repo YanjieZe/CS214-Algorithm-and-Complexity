@@ -200,22 +200,48 @@ $
         \begin{aligned}
         &1, &when\ i\ is\ odd.\\
         &2i-1, &when\ i=2^k,k\in \mathbb{N}\\
-        &2(i-2 ^{\lfloor \log_2 i\rfloor})-1 ,&otherwise\\
+        &C_{i-2 ^{\lfloor \log_2 i\rfloor}} ,&otherwise\\
         \end{aligned}
         \right.
         $$
-        Thus,
+        Since merely based on the expression we can't figure out the total cost easily, we compute the total cost from another  perspective. 
+        ~\\
+        
+        \textbf{Assume $n=2^k$, $k\geq 1$}. This is because when adding the $n$th element, the operation will bring the most cost.
+        
+        Define a \textbf{cycle} for a stack is \textbf{from EMPTY to FULL, then from FULL to EMPTY}. Because from \textbf{Lemma 1} we know the stack only has two state: EMPTY or FULL.
+        
+        For each stack $A_s$, $0\leq s < k$, $A_s$ will go through several cycles: EMPTY to FULL, FULL to EMPTY. By calculating out the number of cycles each stack goes through, we are able to figure out the total cost.
+
+        
+        For the stack $A_s$, the number of cycles it goes through is:
+        $$
+        num_{cycle}(A_s) = \frac{2^k}{2^{s+1}}=2^{k-s-1}
+        $$
+        For one cycle of the stack $A_s$, the cost is:
+        $$
+        cost_{cycle}(A_s)=cost_{pop} + cost_{push} = 2^{s+1}
+        $$
+        Thus, the total cost of a stack is:
+        $$
+         \begin{aligned}
+        cost_{stack}(A_s)
+         &= num_{cycle}(A_s)\times cost_{cycle}(A_s)\\
+         &=2^{s+1} \times 2^{k-s-1}\\
+         &=2^k, for\ 0\leq s <k
+         \end{aligned}
+        $$
+        
+        Therefore:
         $$
         \begin{aligned}
-        T(n)  
-        &=\sum_{i=1}^n C_i\\
-        &=\sum_{odd}1 + \sum_{k=1}^{\lfloor \log_2 n\rfloor}(2\times 2^k-1)+\sum_{otherwise}(2(i-2 ^{\lfloor \log_2 i\rfloor})-1)\\
-        &\leq \frac n2 + 4(n-1)-\log_2n + \sum_{otherwise}(2(i-2 ^{\lfloor \log_2 i\rfloor})-1) \\
-        &\leq \frac 92 n - \log_2 n + \sum_{k=1}^{\lfloor \log_2 n \rfloor+1} (2n-1)\\
-        &=\frac 92 n - \log_2 n + (\lfloor \log_2 n \rfloor+1)(2n-1)\\
-        & = O(n\log n)
-        \end{aligned} 
+        T(n)&=\sum_{s=0}^{k-1} cost_{stack}(A_s) + cost_{stack}(A_{k})\\
+        &=(k-1)2^k + 2^k \\
+        &= k2^k\\
+        &= n\log n
+        \end{aligned}
         $$
+        
         Finally, by \textbf{Aggregation Analysis},we get the amortized cost of adding an element is:
         $$
         \frac{T(n)}{n} = O(\log n)
@@ -224,7 +250,7 @@ $
         \end{solution}
         \item If each array $A_i$ is required to be sorted but elements in different arrays have no relationship with each other, how long does it take in the worst case to search an element in the arrays containing $n$ elements? 
         \begin{solution}
-        The cost of searching an element in $A_i$ using \textbf{Binary Search} is $O(\log|A_i|)$.
+        The cost of searching an element in $A_i$ using \textbf{Binary Search} is $O(\log_2|A_i|)$.
         
         In the worst case, to search an element, we need to search it in all arrays.  What's more, there exists no empty array in $A_0, A_1,...,A_k,n=2^{k+1}-1$.
         
@@ -251,28 +277,140 @@ $
 \begin{solution}
 ~\\
 The cost of adding an element without comparison is shown in problem(b). For adding an element and making the array in order, the cost consists of three parts:\textbf{pop,sort,push}.
-\begin{itemize}
-    \item When $i$ is odd, $C_i$ is still 1.
-    \item When $i=2^k$, there are $i-1$ elements in need of sorting after pop operation. \textbf{Quick Sort} costs $O(i\log i)$ in average.
-    \item Otherwise, there are $m=i-2 ^{\lfloor \log_2 i\rfloor}$ elements in need of sorting after pop operation, costing $O(m\log m)$ in average.
-\end{itemize}
-Thus, we have the expression of $C_i$:
-$$
-        C_i = \left\{
-        \begin{aligned}
-        &1, &when\ i\ is\ odd.\\
-        &2i-1+O(i\log i), &when\ i=2^k,k\in \mathbb{N}\\
-        &2m-1+O(m\log m) ,where\ m=i-2 ^{\lfloor \log_2 i\rfloor}, &otherwise\\
-        \end{aligned}
-        \right.
-        $$
 
-Therefore, amortized cost is $O(\log^2n)$(I guess).
+Since the only difference between the problem(b) and the problem(d) is the need of sorting, the extra cost is the cost of sorting.
+
+We still assume $n=2^k,k\geq1$, because the $2^k$th operation costs most.
+
+From the problem(b) we have known that:
+$$
+num_{cycle}(A_s) = 2^{k-s-1}
+$$
+However, the cost of one cycle is different:
+$$
+cost_{cycle}(A_s) = cost_{pop} + cost_{push} + cost_{sort} = 2^{s+1} + cost_{sort}
+$$
+For one cycle of $A_s$, we only sort the elements to be pushed in $A_s$ once. Then the problems is: \textbf{How can we sort these sorted arrays?}
+
+~\\
+\textbf{One try: K-Merge}
+~\\
+For the first try, we propose an algorithm using \textbf{Min Heap}, with time complexity $O(nlogk)$. The algorithm \textbf{K-Merge} is shown in Alg.~\ref{alg1}.
+
+ \begin{algorithm}[H]
+   \caption{K-Merge}\label{alg1}
+   \textbf{Input:}k sorted arrays(increasing):$\{a_0,a_1,a_2,..,a_k \}$\;
+   \textbf{Output:}One sorted array\;
+	Create an empty Min Heap $H$\;
+	Create an empty result array $A$\;
+	\For{$i=0;i\leq k;i++$}
+	{
+	    Insert $a_i$'s first element into $H$\;
+	    Delete this element from $a_i$\;
+	}
+	\While{$H$ is not empty}
+	{
+	    Pop out the minimal element in $H$ into $A$\;
+	    Denote this element is from $a_s$\;
+	    \If{$a_s$ is not empty}{
+	    Insert $a_s$'s first element into $H$\;
+	    } 
+	}
+	\Return A
+		
+	\end{algorithm}
+	
+\textbf{Time Complexity}: $O(n\log k)$
+
+In alg.\ref{alg1}, We fully utilize the sequence of each array, and maintain a Min Heap of size $k$. Each push and pop operation in Min Heap is $O(\log k)$. For there are n elements in total, the time complexity is $O(n\log k)$, where $k$ is the number of the arrays.
+
+~\\
+Therefore, 
+$$
+cost_{sort}(A_s)=O(2^slog(s-1))=O(2^slogs)
+$$
+$$
+cost_{cycle}(A_s)=2^{s+1} + cost_{sort}(A_s)=2^{s+1} + O(2^slogs)
+$$
+$$
+\begin{aligned}
+cost_{stack}(A_s)&=num_{cycle}(A_s)\times cost_{cycle}(A_s)\\
+&=2^{k-s-1}\times (2^{s+1} + O(2^slogs))\\
+&=2^k + O(2^{k-1}logs), 1\leq s\leq k-1
+\end{aligned}
+$$
+Finally ,we figure out the cost of all:
+$$
+\begin{aligned}
+T(n) &= \sum_{s=1}^{k-1}cost_{stack}(A_s) + cost_{stack}(A_0) + cost_{stack}(A_k)\\
+&= (k-1)2^k + 2^{k-1}O(log((k-1)!)) + 2^k + 2^k +2^kO(logk)\\
+&=O(k2^k) + O(2^klog(k!))\\
+&=O(nlogn) + O(nlog((logn)!))\\
+&=O(nlog((logn)!))
+\end{aligned}
+$$
+
+By \textbf{Aggregation Analysis},we get the amortized cost of adding an element is:
+        $$
+        \frac{T(n)}{n} = O(log((logn)!))
+        $$
+        
+\textbf{Another Try:Mutual-Merge}
+
+Another sort algorithm that works is that we sort k arrays two by two. For example, to sort $a_0, a_1, a_2...,a_k$, We first merge $a_0$ and $a_1$ to become $a_01$, then merge $a_01$ and $a_2$ to become $a_012$...until we merge all arrays. The algorithm called $Mutual-Merge$ is shown in Alg.~\ref{alg2}.
+
+\begin{algorithm}[H]
+\caption{Mutual-Merge}\label{alg2}
+ \textbf{Input:}k sorted arrays(increasing):$\{a_0,a_1,a_2,..,a_k \}$\;
+   \textbf{Output:}One sorted array\;
+    \For{$i=0;i<k;i++$}
+    {
+        Merge $a_i$ and $a_{i+1}$ into $a_{i,i+1}$;
+    }
+    \Return $a_{0,1,...,k}$
+\end{algorithm}
+
+Make the input $A_0, A_1,...,A_{k-1}$, then we compute the time complexity:
+$$
+\begin{aligned}
+T &= (|A_0|+|A_1|) + (|A_0|+|A_1|+|A_2|) +...+(|A_0|+|A_1|+|A_2|...+|A_{k-1}|)\\
+&=\sum_{i=2}^{k}{2^i-1}\\
+&=2^{k+1}+k-3\\
+&=O(n)
+\end{aligned}
+$$
+Therefore,
+$$
+cost_{sort}(A_s) = O(2^s)
+$$
+$$
+cost_{cycle}(A_s) = 2^{s+1} + O(2^s)
+$$
+$$
+\begin{aligned}
+cost_{stack}(A_s) &= num_{cycle}(A_s) \times cost_{cycle}(A_s)\\
+&=2^{k-s-1}\times (2^{s+1} + O(2^s))\\
+&=O(2^k), 1\leq s \leq k-1
+\end{aligned}
+$$
+Finally, the cost of all is:
+$$
+T(n) = O(k2^k) = O(nlogn)
+$$
+And the amortized cost is:
+$$
+\frac{T(n)}{n} = O(logn)
+$$
+
+\textbf{Conclusion}:
+
+The second way is better than the first way, which uses Alg.~\ref{alg2}, with the amortized complexity $O(logn)$. 
+
+
 \end{solution}
     \end{enumerate}
 	
 \end{enumerate}
-
 
 
 \textbf{Remark:} Please include your .pdf, .tex files for uploading with standard file names.
