@@ -68,12 +68,11 @@ void construct_adjacent_matrix(vector< vector<int> > &adjacent_matrix, vector<pa
 
 
 /* Depth First Search, give the id of the vertex with largest post number*/
-void DFS_find_source(int visit_vertex, vector<vector<int> > &adjacent_matrix, int post_number_recorder[], int prev_number_recorder[], int is_deleted[], int &clock)
+void DFS_find_source(int visit_vertex, vector<vector<int> > &adjacent_matrix, int post_number_recorder[], int prev_number_recorder[], int &clock)
 {
     if(prev_number_recorder[visit_vertex]!=0)
         return;
-    if(is_deleted[visit_vertex])
-        return;
+
     else
     {// previsit
         clock++;
@@ -83,7 +82,7 @@ void DFS_find_source(int visit_vertex, vector<vector<int> > &adjacent_matrix, in
     for(int i=0; i<adjacent_matrix.size(); ++i)
     {
         if(adjacent_matrix[visit_vertex][i]==1)
-            DFS_find_source(i, adjacent_matrix, post_number_recorder, prev_number_recorder,is_deleted,  clock);
+            DFS_find_source(i, adjacent_matrix, post_number_recorder, prev_number_recorder, clock);
     }
     clock++;
     post_number_recorder[visit_vertex] = clock;
@@ -111,9 +110,8 @@ void delete_component(int source_vertex, vector< vector<int> > &adjacent_matrix,
 
 }
 
-/* find a source node of a component
-return the id of vertex */
-int find_source_vertex(int start_point, vector< vector<int> > &adjacent_matrix, int is_deleted[])
+/* return component num */
+int find_components(vector< vector<int> > &adjacent_matrix)
 {
     int vertex_num = adjacent_matrix.size();
 
@@ -126,19 +124,32 @@ int find_source_vertex(int start_point, vector< vector<int> > &adjacent_matrix, 
         recorder[i]=0, prev_recorder[i]=0;
     //cout<<"Begin find a source vetex of component..."<<endl;
 
-    DFS_find_source(start_point, adjacent_matrix, recorder, prev_recorder, is_deleted, clock);
-    int max_post_number=0, vertex_id=-1;
+    //find and delete
+    DFS_find_source(0, adjacent_matrix, recorder, prev_recorder, clock);
     for(int i=0; i<vertex_num; ++i)
-        if(recorder[i]>max_post_number)
-            max_post_number = recorder[i], vertex_id=i;
-    delete_component(vertex_id, adjacent_matrix, is_deleted);
-    reverse_graph(adjacent_matrix);
+        if(prev_recorder[i]==0)
+            DFS_find_source(i, adjacent_matrix, recorder, prev_recorder, clock);
     
-    cout<<"Find a source vertex: "<<vertex_id<<endl;
+    reverse_graph(adjacent_matrix);
 
+    int is_deleted[vertex_num];
+    for(int i = 0; i<vertex_num; ++i)
+        is_deleted[i] = 0;
 
+    int components_num=0;
+    while (sum(is_deleted, vertex_num)!=vertex_num)
+    {
+        // find the max post number
+        int max_post_number=0, vertex_id=-1;
+        for(int i=0; i<vertex_num; ++i)
+            if(recorder[i]>max_post_number && is_deleted[i]!=1)
+                max_post_number = recorder[i], vertex_id=i;
+        delete_component(vertex_id, adjacent_matrix, is_deleted);
+        components_num++;
+        cout<<"Component "<<components_num<<" is found."<<endl;
+    }
 
-    return vertex_id;
+    return components_num;
 }
 
 
@@ -166,25 +177,9 @@ int SCC(int n, vector<pair<int,int> >& edge) {
     construct_adjacent_matrix(adjacent_matrix, edge);
             
 
-    int num_components = 0;
-    int is_deleted[n];
-    int start_point=0;
-    for(int i = 0; i<n; ++i)
-        is_deleted[i] = 0;
-    int sum_delete;
-    while ((sum_delete=sum(is_deleted, n))!=n)
-    {   
-        for(int i=0; i<n; ++i)
-            if(is_deleted[i]!=1)
-            {
-             start_point = i;
-             break;
-            }
-      
-        int id = find_source_vertex(start_point, adjacent_matrix, is_deleted);
-        num_components++;
-    }
-    cout<<"Number of components: "<<num_components<<endl;
+    int num_components = find_components(adjacent_matrix);
+    
+    cout<<"Number of SCC: "<<num_components<<endl;
     return num_components;
 }
 
@@ -198,7 +193,7 @@ int main()
     vector<pair<int,int> > edge;
     ifstream fin;
     ofstream fout;
-    fin.open("test.in");
+    fin.open("SCC.in");
     cout<<fin.is_open()<<endl;
     fin>>n>>m;
     cout<<n<<" "<<m<<endl;
