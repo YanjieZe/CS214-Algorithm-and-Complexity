@@ -1,5 +1,5 @@
 # Labs For CS214: Algorithm and Complexity(English)
-Finished by [YanjieZe](), from SJTU CS19
+Finished by [YanjieZe](https://github.com/YanjieZe), from SJTU CS19
 
 ## Course Information
 
